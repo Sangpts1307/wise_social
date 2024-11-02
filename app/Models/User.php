@@ -12,15 +12,20 @@ class User extends Authenticatable
 {
     use HasApiTokens, HasFactory, Notifiable;
 
+    const ONLINE_STATUS_ONLINE = 2;
+    const ONLINE_STATUS_OFFLINE = 1;
+    const STATUS_ACTIVE = 1;
+    const STATUS_BANNED = 0;
+
     /**
      * The attributes that are mass assignable.
      *
      * @var array<int, string>
      */
     protected $fillable = [
-        'name',
-        'email',
-        'password',
+        'name', 'email', 'password', 'location',
+        'city', 'avatar', 'banner', 'overview',
+        'online_status', 'status'
     ];
 
     /**
