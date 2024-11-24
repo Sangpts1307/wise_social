@@ -53,21 +53,21 @@ class ApiResponse
         ]);
     }
 
-    public function BadRequest()
+    public function BadRequest($message = null)
     {
         return json_encode([
             'code' => 400,
             'data' => null,
-            'message' => 'Bad request.'
+            'message' => $message
         ]);
     }
 
-    public function UnAuthorization()
+    public function UnAuthorization($message = null)
     {
         return json_encode([
             'code' => 401,
             'data' => null,
-            'message' => 'UnAuthorization.'
+            'message' => $message
         ]);
     }
 
