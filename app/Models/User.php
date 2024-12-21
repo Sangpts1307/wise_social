@@ -6,6 +6,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Auth;
 use Laravel\Sanctum\HasApiTokens;
 
 class User extends Authenticatable
@@ -47,4 +48,27 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
         'password' => 'hashed',
     ];
+
+    /**
+     * Relationship function get follower
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany 
+     */
+    public function follower() 
+    {
+        return $this->hasMany('\App\Models\Follow', 'user_id', 'id')
+            ->where('user_id', '<>', Auth::user()->id)
+            ->where('follow_id', Auth::user()->id);
+    }
+
+    /**
+     * Relationship function get following
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany 
+     */
+    public function follows() 
+    {
+        return $this->hasMany('\App\Models\Follow', 'user_id', 'id')
+            ->where('user_id', Auth::user()->id);
+    }
 }

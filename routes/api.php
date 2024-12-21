@@ -27,6 +27,8 @@ Route::group(['middleware' => 'auth:sanctum'], function () {
     Route::post('/user-store', [App\Http\Controllers\APIController::class, 'store']);
     Route::patch('/update-password', [App\Http\Controllers\APIController::class, 'updatePassword']);
     Route::delete('/delete-user/{id}', [App\Http\Controllers\APIController::class, 'deleteUser']);
+
+    Route::get('/my-infor', [App\Http\Controllers\UserController::class, 'show']);
 });
 
 Route::post('/register', [\App\Http\Controllers\AuthController::class, 'register']);
