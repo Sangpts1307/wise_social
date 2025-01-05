@@ -71,4 +71,9 @@ class User extends Authenticatable
         return $this->hasMany('\App\Models\Follow', 'user_id', 'id')
             ->where('user_id', Auth::user()->id);
     }
+
+    public function experiences()
+    {
+        return $this->hasMany('\App\Models\Experience', 'user_id', 'id');
+    }
 }
