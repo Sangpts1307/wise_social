@@ -263,6 +263,47 @@ class UserController extends Controller
         return $this->apiResponse->success($user);
     }
 
+    public function search(Request $request)
+    {
+        $param = $request->all();
+        $users = User::with([
+            'experiences' => function ($experienceQuery) {
+                return $experienceQuery->select('id', 'user_id', 'title');
+            }
+        ])->select(
+            'id', 'name', 'email',  'avatar'
+        )->whereHas('experiences', function ($query) use ($param) {
+            return $query->where('title', 'Like', '%' . $param['key-word'] . '%');
+        })->orWhere('name', 'Like', '%' . $param['key-word'] . '%')
+        ->orWhere('email', 'Like', '%' . $param['key-word'] . '%')
+        ->orderBy('id', 'DESC')->get();
+        if (count($users) > 0) {
+            foreach ($users as $user) {
+                $folderAvatar = null;
+                if (!is_null($user->avatar)) {
+                    $folderAvatar = explode('@', $user->email);
+                    $user->avatar = url(
+                        'avatars/' . $folderAvatar[0] . '/' . $user->avatar
+                    );
+                }
+                $txtExperience = '';
+                $i = 1;
+                foreach ($user->experiences as $experience) {
+                    if ($i < count($user->experiences)) {
+                        $txtExperience .= $experience->title . ', ';
+                    } else {
+                        $txtExperience .= $experience->title;
+                    }
+                    $i++;
+                }
+                $user->experience = $this->truncateString($txtExperience, 100);
+                $user->name = $this->truncateString($user->name, 100);
+                unset($user->experiences);
+            }
+        }
+        return $this->apiResponse->success($users);
+    }
+
     /**
      * Show the form for editing the specified resource.
      */
